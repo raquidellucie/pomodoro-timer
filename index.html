@@ -14,31 +14,28 @@
     box-sizing: border-box;
   }
 
-  /* 🚫 FOND TRANSPARENT TOTAL */
   body {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
+    background: rgb(25,25,25);
     font-family: "Inter", sans-serif;
     color: white;
   }
 
-  /* 🧱 WIDGET FIXE */
+  /* 🧱 CONTAINER FIXE (IMPORTANT) */
   .container {
     width: 260px;
-    height: 220px;
-
+    height: 220px; /* empêche toute variation */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    background: rgba(20, 20, 20, 0.35); /* léger glass (optionnel) */
+    background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    backdrop-filter: blur(10px);
   }
 
   .mode {
@@ -49,13 +46,14 @@
     margin-bottom: 10px;
   }
 
+  /* ⛔ TIMER STABLE À 100% */
   .timer {
-    font-size: 46px;
+    font-size: 46px; /* plus petit */
     font-weight: 600;
-    width: 180px;
+    width: 180px; /* FIXE */
     text-align: center;
 
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums; /* empêche les décalages */
     letter-spacing: 1px;
 
     margin-bottom: 6px;
