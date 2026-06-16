@@ -2,226 +2,235 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Pomodoro 3h</title>
+<title>Pomodoro</title>
+
 <style>
-    :root {
-        --bg: #0f172a;
-        --card: #020617;
-        --accent: #38bdf8;
-        --work: #22c55e;
-        --break: #facc15;
-        --text: #e5e7eb;
-        --muted: #94a3b8;
-        font-family: "Inter", system-ui, sans-serif;
-    }
+:root {
+    --bg: #0b0f1a;
+    --card: rgba(255,255,255,0.04);
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --accent: #ef4444;
+    font-family: system-ui, sans-serif;
+}
 
-    body {
-        background: radial-gradient(circle at top, #020617, #000);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        color: var(--text);
-    }
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #111827, #05070f);
+    color: var(--text);
+}
 
-    .timer-card {
-        background: linear-gradient(180deg, #020617, #020617cc);
-        border-radius: 24px;
-        padding: 32px 36px;
-        width: 380px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        position: relative;
-    }
+.timer {
+    width: 360px;
+    padding: 28px;
+    border-radius: 20px;
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    text-align: center;
+}
 
-    .status {
-        text-align: center;
-        font-size: 0.9rem;
-        letter-spacing: 0.15em;
-        color: var(--muted);
-        margin-bottom: 12px;
-    }
+/* CYCLE */
+.cycle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
 
-    .time {
-        font-size: 4rem;
-        text-align: center;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        margin: 10px 0;
-    }
+/* MODE */
+.status {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
 
-    .cycle {
-        text-align: center;
-        color: var(--muted);
-        font-size: 0.85rem;
-        margin-bottom: 20px;
-    }
+/* TIMER */
+.time {
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin: 10px 0 20px;
+}
 
-    .controls {
-        display: flex;
-        justify-content: center;
-        gap: 14px;
-    }
+/* BUTTONS */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
-    button {
-        background: none;
-        border: 1px solid #1e293b;
-        color: var(--text);
-        padding: 10px 18px;
-        border-radius: 14px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: 0.2s;
-    }
+button {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-    button:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-    }
+button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
 
-    .total-time {
-        position: absolute;
-        bottom: 14px;
-        right: 18px;
-        font-size: 0.75rem;
-        color: var(--muted);
-    }
+/* TOTAL */
+.total {
+    margin-top: 18px;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
 
-    .stop-screen {
-        display: none;
-        text-align: center;
-    }
+/* STOP SCREEN */
+.stop {
+    display: none;
+}
 
-    .stop-screen h1 {
-        font-size: 4rem;
-        margin: 0;
-        color: var(--accent);
-    }
+.stop h1 {
+    font-size: 3rem;
+    color: var(--accent);
+    margin: 0;
+}
 
-    .stop-screen p {
-        color: var(--muted);
-        margin-top: 8px;
-    }
+.stop p {
+    color: var(--muted);
+}
 </style>
 </head>
+
 <body>
 
-<div class="timer-card">
-    <div class="main">
-        <div class="status" id="status">TRAVAIL</div>
-        <div class="time" id="time">01:00:00</div>
-        <div class="cycle" id="cycle">Cycle 1 / 3</div>
+<div class="timer">
 
-        <div class="controls">
-            <button onclick="toggleTimer()">Pause / Reprendre</button>
-            <button onclick="resetTimer()">Reset</button>
+    <div class="main">
+        <div class="cycle" id="cycle">Cycle 1 / 3</div>
+        <div class="status" id="status">TRAVAIL</div>
+
+        <div class="time" id="time">01:00:00</div>
+
+        <div class="buttons">
+            <button onclick="toggle()">Pause / Play</button>
+            <button onclick="reset()">Reset</button>
         </div>
+
+        <div class="total" id="total">Total : 00:00:00</div>
     </div>
 
-    <div class="stop-screen" id="stop">
+    <div class="stop" id="stop">
         <h1>STOP</h1>
         <p>La journée de travail est finie</p>
     </div>
 
-    <div class="total-time" id="total">Total : 00:00:00</div>
 </div>
 
 <script>
 let WORK = 3600;
-let SHORT_BREAK = 300;
-let LONG_BREAK = 1800;
+let SHORT = 300;
+let LONG = 1800;
 
-let timeLeft = WORK;
+let time = WORK;
 let running = false;
-let phase = "work";
-let workHoursDone = 0;
-let cyclesDone = 0;
-let totalSeconds = 0;
-let timer;
 
-function format(t) {
-    let h = String(Math.floor(t / 3600)).padStart(2, '0');
-    let m = String(Math.floor((t % 3600) / 60)).padStart(2, '0');
-    let s = String(t % 60).padStart(2, '0');
-    return `${h}:${m}:${s}`;
+let phase = "work";
+let cycles = 0;
+let workBlock = 0;
+let total = 0;
+
+let interval;
+
+function format(s){
+    let h = String(Math.floor(s/3600)).padStart(2,'0');
+    let m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+    let sec = String(s%60).padStart(2,'0');
+    return `${h}:${m}:${sec}`;
 }
 
-function updateUI() {
-    document.getElementById("time").textContent = format(timeLeft);
-    document.getElementById("total").textContent = "Total : " + format(totalSeconds);
+function update(){
+    document.getElementById("time").textContent = format(time);
+    document.getElementById("total").textContent = "Total : " + format(total);
     document.getElementById("status").textContent =
         phase === "work" ? "TRAVAIL" :
-        phase === "short" ? "PAUSE" :
-        "PAUSE LONGUE";
+        phase === "short" ? "PAUSE" : "PAUSE LONGUE";
+
+    document.getElementById("cycle").textContent = `Cycle ${cycles+1} / 3`;
 }
 
-function nextPhase() {
-    if (phase === "work") {
-        workHoursDone++;
-        if (workHoursDone % 3 === 0) {
+function next(){
+    if(phase === "work"){
+        workBlock++;
+
+        if(workBlock % 3 === 0){
             phase = "long";
-            timeLeft = LONG_BREAK;
-            cyclesDone++;
+            time = LONG;
+            cycles++;
         } else {
             phase = "short";
-            timeLeft = SHORT_BREAK;
+            time = SHORT;
         }
     } else {
         phase = "work";
-        timeLeft = WORK;
+        time = WORK;
     }
 
-    if (cyclesDone === 3) {
-        endDay();
+    if(cycles === 3){
+        end();
         return;
     }
 
-    document.getElementById("cycle").textContent = `Cycle ${cyclesDone + 1} / 3`;
-    updateUI();
+    update();
 }
 
-function tick() {
-    if (!running) return;
-    timeLeft--;
-    totalSeconds++;
-    updateUI();
+function tick(){
+    if(!running) return;
 
-    if (timeLeft <= 0) {
-        nextPhase();
+    time--;
+    total++;
+
+    if(time <= 0){
+        next();
     }
+
+    update();
 }
 
-function toggleTimer() {
+function toggle(){
     running = !running;
-    if (running) {
-        timer = setInterval(tick, 1000);
+    if(running){
+        interval = setInterval(tick, 1000);
     } else {
-        clearInterval(timer);
+        clearInterval(interval);
     }
 }
 
-function resetTimer() {
-    if (!confirm("Remettre le timer à zéro ?")) return;
-    clearInterval(timer);
+function reset(){
+    if(!confirm("Reset complet du timer ?")) return;
+
+    clearInterval(interval);
     running = false;
+
     phase = "work";
-    timeLeft = WORK;
-    workHoursDone = 0;
-    cyclesDone = 0;
-    totalSeconds = 0;
+    time = WORK;
+    cycles = 0;
+    workBlock = 0;
+    total = 0;
+
     document.getElementById("stop").style.display = "none";
     document.querySelector(".main").style.display = "block";
-    document.getElementById("cycle").textContent = "Cycle 1 / 3";
-    updateUI();
+
+    update();
 }
 
-function endDay() {
-    clearInterval(timer);
+function end(){
+    clearInterval(interval);
     document.querySelector(".main").style.display = "none";
     document.getElementById("stop").style.display = "block";
 }
 
-updateUI();
+update();
 </script>
 
 </body>
